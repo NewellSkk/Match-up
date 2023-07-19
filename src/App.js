@@ -1,67 +1,62 @@
 import "./styles.css";
-import { useState } from "react";
-function Square({ type, value, match }) {
+function Square({value}) {
   return (
-    <div className="Square" onClick={() => match()}>
-      <div className={type}>{value}</div>
+    <div className="Square" >
+      {value}
+    </div>
+  );
+}
+function BigBox({data,type}){
+  return(
+    <div className={type}>
+      <h1>{type}</h1>
+      {data}
     </div>
   );
 }
 
 function Screen({ info }) {
-  let [Nat, setNat] = useState(" ");
-  let [Cap, setCap] = useState(" ");
-  let match = (value, type) => {
-    alert(`clicked value:${value}`);
-    if (type === "Capital") {
-      e.target.className="Clicked";
-      setCap(value);
-      alert(`Clicked cap:${Cap}`);
-    }
-    if (type === "Country") {
-      setNat(value);
-      alert(`Clicked country:${Cap}`);
-    }
-    if (Cap === Nat) {
-      alert(`Match ${Nat}`);
-    } else {
-      alert(`Nat:${Nat} Cap:${Cap}`);
-    }
-  };
-  let bigBox = [];
+ 
+  let Countries=[];
+  let Capitals=[];
 
   info.forEach((element) => {
-    if (bigBox.indexOf(element.country) === -1) {
-      bigBox.push(
+    if (Countries.indexOf(element.country) === -1) {
+      Countries.push(
         <Square
-          type="Country"
           value={element.country}
           key={element.country}
-          match={() => match(element.country, "Country")}
-        />,
+        />);
+        Capitals.push(
         <Square
-          type="Capital"
           value={element.capital}
           key={element.capital}
-          match={() => match(element.country, "Capital")}
         />
       );
+      Capitals=shuffleArray(Capitals);
     }
   });
-  return <>{bigBox}</>;
+  return(
+  <div className="flex-container">
+  {<BigBox data={Countries} type="Country"/>}
+  {<BigBox data={Capitals} type="Capital"/>}
+
+  </div>
+  );
 }
 
-// const shuffleArray = (array) => {
-//   for (var i = array.length - 1; i > 0; i--) {
-//     var j = Math.floor(Math.random() * (i + 1));
 
-//     var temp = array[i];
-//     array[i] = array[j];
-//     array[j] = temp;
-//   }
+const shuffleArray = (array) => {
+  for (var i = array.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
 
-//   return array;
-// };
+    var temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
+  }
+
+  return array;
+};
 let INFO = [
   { country: "Kenya", capital: "Nairobi" },
   { country: "Uganda", capital: "Kampala" },

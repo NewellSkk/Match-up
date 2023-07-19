@@ -11,16 +11,31 @@
   line-height: 34px;
   height: 34px;
   margin: 5px;
-  padding-right: 5px;
+  padding: 2px;
   text-align: center;
   width: 90px;
 }
 .Country {
   color: blue;
+  border: 3px solid #fff;
+  margin: 5px;
+  width: 120px;
+  min-height: 400px;
+  text-align: center;
 }
 .Capital {
   color: red;
+  border: 3px solid #fff;
+  margin: 5px;
+  width: 120px;
+  min-height: 400px;
+  text-align: center;
+}
+.flex-container{
+  display: flex;
+  flex-wrap: nowrap;
 }
 .Clicked{
+  color: white;
   background-color: black;
 }
