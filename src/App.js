@@ -14,6 +14,7 @@ function Screen({ info }) {
   let match = (value, type) => {
     alert(`clicked value:${value}`);
     if (type === "Capital") {
+      e.target.className="Clicked";
       setCap(value);
       alert(`Clicked cap:${Cap}`);
     }
