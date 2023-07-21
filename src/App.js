@@ -1,47 +1,55 @@
 import "./styles.css";
-function Square({value}) {
+import {useState} from 'react';
+
+function Square({value,match,matchFn}) {
   return (
-    <div className="Square" >
+    <div className="Square" 
+    onClick={
+      (e)=>{
+        matchFn(e,match)
+      }} >
       {value}
     </div>
   );
 }
-function BigBox({data,type}){
+function BigBox({info,type}){
+  let entries=[];
+
+  let matchFn=(e,val)=>{
+    alert(`${val} clicked`);
+     let preClicked=document.getElementsByClassName("Clicked")[0];
+     if(preClicked!=null){
+       preClicked.classList.remove("Clicked");
+     }
+     e.target.classList.add("Clicked");
+  }
+  info.forEach(entry => {
+    if (entries.indexOf(entry.country) === -1) {
+      entries.push(
+        <Square 
+          value={(type==="country")?entry.country:entry.capital}
+          key={entry.country}
+          match={entry.country}
+          matchFn={(e,value)=>matchFn(e,value) }
+        />
+      );
+    }
+  });
+  entries=shuffleArray(entries);
   return(
     <div className={type}>
       <h1>{type}</h1>
-      {data}
+      <div>{entries}</div>
     </div>
   );
 }
 
 function Screen({ info }) {
- 
-  let Countries=[];
-  let Capitals=[];
-
-  info.forEach((element) => {
-    if (Countries.indexOf(element.country) === -1) {
-      Countries.push(
-        <Square
-          value={element.country}
-          key={element.country}
-        />);
-        Capitals.push(
-        <Square
-          value={element.capital}
-          key={element.capital}
-        />
-      );
-      Capitals=shuffleArray(Capitals);
-    }
-  });
   return(
-  <div className="flex-container">
-  {<BigBox data={Countries} type="Country"/>}
-  {<BigBox data={Capitals} type="Capital"/>}
-
-  </div>
+    <div className="flex-container">
+    <BigBox info={info} type="country"/>
+    <BigBox info={info} type="capital"/>
+    </div>
   );
 }
 
