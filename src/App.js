@@ -1,21 +1,29 @@
 import "./styles.css";
 import {useState} from 'react';
 
-function Square({value,match,matchFn}) {
+function Square({value,match,clickFn}) {
   return (
     <div className="Square" 
     onClick={
       (e)=>{
-        matchFn(e,match)
+        clickFn(e,match)
       }} >
       {value}
     </div>
   );
 }
-function BigBox({info,type}){
-  let entries=[];
+function BigBox({info,type,select,setSelect}){
 
-  let matchFn=(e,val)=>{
+  let entries=[];
+  let clickFn=(e,val)=>{
+    setSelect(prev=>{
+      if(type==="country"){
+        return{...prev,country:val}
+      }else{
+        return{...prev,capital:val}
+      } 
+    })
+    console.log(select)
     alert(`${val} clicked`);
      let preClicked=document.getElementsByClassName("Clicked")[0];
      if(preClicked!=null){
@@ -30,7 +38,7 @@ function BigBox({info,type}){
           value={(type==="country")?entry.country:entry.capital}
           key={entry.country}
           match={entry.country}
-          matchFn={(e,value)=>matchFn(e,value) }
+          clickFn={(e,value)=>clickFn(e,value) }
         />
       );
     }
@@ -45,10 +53,12 @@ function BigBox({info,type}){
 }
 
 function Screen({ info }) {
+  let [select,setSelect]=useState({country:"",capital:""});
+  
   return(
     <div className="flex-container">
-    <BigBox info={info} type="country"/>
-    <BigBox info={info} type="capital"/>
+    <BigBox info={info} type="country" select={select} setSelect={setSelect}/>
+    <BigBox info={info} type="capital"select={select} setSelect={setSelect}/>
     </div>
   );
 }
