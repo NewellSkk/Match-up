@@ -1,7 +1,7 @@
 import "./styles.css";
 import {useState} from 'react';
 
-function Square({value,match,clickFn}) {
+function Square({value,match,clickFn,select}) {
   return (
     <div className="Square" 
     onClick={
@@ -14,7 +14,9 @@ function Square({value,match,clickFn}) {
 }
 function BigBox({info,type,select,setSelect}){
 
-  let entries=[];
+  let countires=info.map(el=>el.country);
+  let capitals=info.map(el=>el.capital);
+
   let clickFn=(e,val)=>{
     setSelect(prev=>{
       if(type==="country"){
@@ -23,26 +25,25 @@ function BigBox({info,type,select,setSelect}){
         return{...prev,capital:val}
       } 
     })
-    console.log(select)
-    alert(`${val} clicked`);
-     let preClicked=document.getElementsByClassName("Clicked")[0];
-     if(preClicked!=null){
+    let preClicked=document.getElementsByClassName("Clicked")[0];
+    if(preClicked!=null){
        preClicked.classList.remove("Clicked");
      }
      e.target.classList.add("Clicked");
+     console.log(select);
   }
-  info.forEach(entry => {
-    if (entries.indexOf(entry.country) === -1) {
-      entries.push(
-        <Square 
-          value={(type==="country")?entry.country:entry.capital}
-          key={entry.country}
-          match={entry.country}
-          clickFn={(e,value)=>clickFn(e,value) }
-        />
-      );
-    }
-  });
+ 
+  let entries=((type==="country")?countires:capitals).map((element,index)=>{
+    return(
+      <Square 
+      value={element}
+      key={index}
+      match={element}
+      clickFn={(e,value)=>clickFn(e,value) }
+    />
+    );
+  })
+
   entries=shuffleArray(entries);
   return(
     <div className={type}>
@@ -54,6 +55,7 @@ function BigBox({info,type,select,setSelect}){
 
 function Screen({ info }) {
   let [select,setSelect]=useState({country:"",capital:""});
+ 
   
   return(
     <div className="flex-container">
