@@ -1,5 +1,5 @@
 import "./styles.css";
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 
 function Square({value,match,clickFn,select}) {
   return (
@@ -12,28 +12,19 @@ function Square({value,match,clickFn,select}) {
     </div>
   );
 }
-function BigBox({info,type,select,setSelect}){
 
-  let countires=info.map(el=>el.country);
-  let capitals=info.map(el=>el.capital);
+function BigBox({arr,type,select,setSelect,highlight}){
 
   let clickFn=(e,val)=>{
-    setSelect(prev=>{
-      if(type==="country"){
-        return{...prev,country:val}
-      }else{
-        return{...prev,capital:val}
-      } 
-    })
+    setSelect(val);
     let preClicked=document.getElementsByClassName("Clicked")[0];
     if(preClicked!=null){
        preClicked.classList.remove("Clicked");
      }
      e.target.classList.add("Clicked");
-     console.log(select);
   }
  
-  let entries=((type==="country")?countires:capitals).map((element,index)=>{
+  let entries=arr.map((element,index)=>{
     return(
       <Square 
       value={element}
@@ -54,13 +45,38 @@ function BigBox({info,type,select,setSelect}){
 }
 
 function Screen({ info }) {
-  let [select,setSelect]=useState({country:"",capital:""});
- 
+  
+  const [countries, setCountries] = useState(INFO.map(each => each.country));
+  const [capitals, setCapitals] = useState(INFO.map(each => each.capital));
+  let [selectCountry,setSelectCountry]=useState('');
+  let [selectCapital,setSelectCapital]=useState('');
+
+  
+
+  useEffect(() => {
+    if (selectCountry && selectCapital) {
+      const foundRegion = INFO.find(each => each.country === selectCountry);
+      if (foundRegion) {
+        if (selectCapital === foundRegion.capital) {
+          setCountries(prev => prev.filter(each => each !== selectCountry))
+          setCapitals(prev => prev.filter(each => each !== selectCapital));
+          document.getElementsByClassName('Clicked')[0].classList.remove('Clicked')
+          setSelectCapital('');
+          setSelectCountry('');
+      
+        } else {
+          document.getElementsByClassName('Clicked')[0].classList.remove('Clicked')
+          setSelectCapital('');
+          setSelectCountry('');
+        }
+      }
+    }
+  }, [selectCountry, selectCapital]);
   
   return(
     <div className="flex-container">
-    <BigBox info={info} type="country" select={select} setSelect={setSelect}/>
-    <BigBox info={info} type="capital"select={select} setSelect={setSelect}/>
+    <BigBox arr={countries} type="country" select={selectCountry} setSelect={setSelectCountry} />
+    <BigBox arr={capitals} type="capital"select={selectCapital} setSelect={setSelectCapital} />
     </div>
   );
 }
